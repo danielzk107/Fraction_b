@@ -77,6 +77,8 @@ void Fraction::FixGCD()
     denom = denom / gcd;
 }
 
+
+
 Fraction Float_to_Fraction(float a)
 {
     int integralpart = static_cast<int>(a);             // Casting the number to int, disregarding the fractional part.
@@ -120,10 +122,6 @@ Fraction operator-(Fraction a, Fraction b)
 };
 Fraction operator-(Fraction a, float b)
 {
-    if (b == 0)
-    {
-        throw(b);
-    }
     float b_3dec = roundf(b * 1000) / 1000;
     Fraction fb = Float_to_Fraction(b_3dec);
     return a - fb;
@@ -144,6 +142,10 @@ Fraction operator/(Fraction a, Fraction b)
 };
 Fraction operator/(Fraction a, float b)
 {
+    if (b == 0)
+    {
+        throw(b);
+    }
     float b_3dec = roundf(b * 1000) / 1000;
     Fraction fb = Float_to_Fraction(b_3dec);
     return a / fb;
@@ -176,30 +178,10 @@ Fraction operator*(Fraction a, float b)
 }
 
 // We could compare nums and denoms but to keep all equality checks consistant, we will convert to floats.
-bool operator==(Fraction a, Fraction b)
+bool Fraction::operator==(const Fraction& other) const
 {
-    float a_3dec = roundf(float(a.num) / a.denom * 1000) / 1000;
-    float b_3dec = roundf(float(b.num) / b.denom * 1000) / 1000;
-    if (a_3dec == b_3dec)
-    {
-        return true;
-    }
-    return false;
-};
-bool operator==(float a, Fraction b)
-{
-    float b_3dec = roundf(float(b.num) / b.denom * 1000) / 1000;
-    float a_3dec = roundf(a * 1000) / 1000;
-    if (a_3dec == b_3dec)
-    {
-        return true;
-    }
-    return false;
-};
-bool operator==(Fraction a, float b)
-{
-    float a_3dec = roundf(float(a.num) / a.denom * 1000) / 1000;
-    float b_3dec = roundf(b * 1000) / 1000;
+    float a_3dec = roundf(float(num) / denom * 1000) / 1000;
+    float b_3dec = roundf(float(other.num) / other.denom * 1000) / 1000;
     if (a_3dec == b_3dec)
     {
         return true;
@@ -207,156 +189,176 @@ bool operator==(Fraction a, float b)
     return false;
 };
 
-bool operator!=(Fraction a, Fraction b)
+bool operator==(float a, const Fraction &b)
 {
-    float a_3dec = roundf(float(a.num) / a.denom * 1000) / 1000;
     float b_3dec = roundf(float(b.num) / b.denom * 1000) / 1000;
-    if (a_3dec != b_3dec)
-    {
-        return true;
-    }
-    return false;
-};
-bool operator!=(float a, Fraction b)
-{
     float a_3dec = roundf(a * 1000) / 1000;
-    float b_3dec = roundf(float(b.num) / b.denom * 1000) / 1000;
-    if (a_3dec != b_3dec)
-    {
-        return true;
-    }
-    return false;
-};
-bool operator!=(Fraction a, float b)
-{
-    float b_3dec = roundf(b * 1000) / 1000;
-    float a_3dec = roundf(float(a.num) / a.denom * 1000) / 1000;
-    if (a_3dec != b_3dec)
-    {
-        return true;
-    }
-    return false;
-};
-
-bool operator<(Fraction a, Fraction b)
-{
-    float a_3dec = roundf(float(a.num) / a.denom * 1000) / 1000;
-    float b_3dec = roundf(float(b.num) / b.denom * 1000) / 1000;
-    if (a_3dec < b_3dec)
-    {
-        return true;
-    }
-    return false;
-};
-bool operator<(float a, Fraction b)
-{
-    float a_3dec = roundf(a * 1000) / 1000;
-    float b_3dec = roundf(float(b.num) / b.denom * 1000) / 1000;
-    if (a_3dec < b_3dec)
-    {
-        return true;
-    }
-    return false;
-};
-bool operator<(Fraction a, float b)
-{
-    float b_3dec = roundf(b * 1000) / 1000;
-    float a_3dec = roundf(float(a.num) / a.denom * 1000) / 1000;
-    if (a_3dec < b_3dec)
-    {
-        return true;
-    }
-    return false;
-};
-
-bool operator>(Fraction a, Fraction b)
-{
-    float a_3dec = roundf(float(a.num) / a.denom * 1000) / 1000;
-    float b_3dec = roundf(float(b.num) / b.denom * 1000) / 1000;
-    if (a_3dec > b_3dec)
-    {
-        return true;
-    }
-    return false;
-};
-bool operator>(Fraction a, float b)
-{
-    float b_3dec = roundf(b * 1000) / 1000;
-    float a_3dec = roundf(float(a.num) / a.denom * 1000) / 1000;
-    if (a_3dec > b_3dec)
-    {
-        return true;
-    }
-    return false;
-};
-bool operator>(float a, Fraction b)
-{
-    float a_3dec = roundf(a * 1000) / 1000;
-    float b_3dec = roundf(float(b.num) / b.denom * 1000) / 1000;
-    if (a_3dec > b_3dec)
-    {
-        return true;
-    }
-    return false;
-};
-
-bool operator>=(Fraction a, Fraction b)
-{
-    float a_3dec = roundf(float(a.num) / a.denom * 1000) / 1000;
-    float b_3dec = roundf(float(b.num) / b.denom * 1000) / 1000;
-    // The following line doesnt work because CHECK_FALSE is dumb (it has weird inexplicable issues with this format)
-    // return a_3dec >= b_3dec;
-    if (a_3dec >= b_3dec)
+    if (a_3dec == b_3dec)
     {
         return true;
     }
     return false;
 }
-bool operator>=(float a, Fraction b)
-{
-    float a_3dec = roundf(a * 1000) / 1000;
-    float b_3dec = roundf(float(b.num) / b.denom * 1000) / 1000;
-    if (a_3dec >= b_3dec)
-    {
-        return true;
-    }
-    return false;
-}
-bool operator>=(Fraction a, float b)
-{
-    float b_3dec = roundf(b * 1000) / 1000;
+bool operator==(const Fraction &a, float b){
     float a_3dec = roundf(float(a.num) / a.denom * 1000) / 1000;
-    if (a_3dec >= b_3dec)
+    float b_3dec = roundf(b * 1000) / 1000;
+    if (a_3dec == b_3dec)
     {
         return true;
     }
     return false;
 }
 
-bool operator<=(Fraction a, Fraction b)
+
+bool Fraction::operator!=(const Fraction& other) const
 {
+    float a_3dec = roundf(float(num) / denom * 1000) / 1000;
+    float b_3dec = roundf(float(other.num) / other.denom * 1000) / 1000;
+    if (a_3dec != b_3dec)
+    {
+        return true;
+    }
+    return false;
+};
+
+bool operator!=(float a, const Fraction &b)
+{
+     float b_3dec = roundf(float(b.num) / b.denom * 1000) / 1000;
+    float a_3dec = roundf(a * 1000) / 1000;
+    if (a_3dec != b_3dec)
+    {
+        return true;
+    }
+    return false;
+}
+bool operator!=(const Fraction &a, float b){
     float a_3dec = roundf(float(a.num) / a.denom * 1000) / 1000;
-    float b_3dec = roundf(float(b.num) / b.denom * 1000) / 1000;
+    float b_3dec = roundf(b * 1000) / 1000;
+    if (a_3dec != b_3dec)
+    {
+        return true;
+    }
+    return false;
+}
+
+bool Fraction::operator<(const Fraction& other) const
+{
+    float a_3dec = roundf(float(num) / denom * 1000) / 1000;
+    float b_3dec = roundf(float(other.num) / other.denom * 1000) / 1000;
+    if (a_3dec < b_3dec)
+    {
+        return true;
+    }
+    return false;
+};
+
+bool operator<(float a, const Fraction &b)
+{
+     float b_3dec = roundf(float(b.num) / b.denom * 1000) / 1000;
+    float a_3dec = roundf(a * 1000) / 1000;
+    if (a_3dec != b_3dec)
+    {
+        return true;
+    }
+    return false;
+}
+bool operator<(const Fraction &a, float b){
+    float a_3dec = roundf(float(a.num) / a.denom * 1000) / 1000;
+    float b_3dec = roundf(b * 1000) / 1000;
+    if (a_3dec < b_3dec)
+    {
+        return true;
+    }
+    return false;
+}
+
+bool Fraction::operator>(const Fraction& other) const
+{
+    float a_3dec = roundf(float(num) / denom * 1000) / 1000;
+    float b_3dec = roundf(float(other.num) / other.denom * 1000) / 1000;
+    if (a_3dec > b_3dec)
+    {
+        return true;
+    }
+    return false;
+};
+
+bool operator>(float a, const Fraction &b)
+{
+     float b_3dec = roundf(float(b.num) / b.denom * 1000) / 1000;
+    float a_3dec = roundf(a * 1000) / 1000;
+    if (a_3dec > b_3dec)
+    {
+        return true;
+    }
+    return false;
+}
+bool operator>(const Fraction &a, float b){
+    float a_3dec = roundf(float(a.num) / a.denom * 1000) / 1000;
+    float b_3dec = roundf(b * 1000) / 1000;
+    if (a_3dec > b_3dec)
+    {
+        return true;
+    }
+    return false;
+}
+
+
+bool Fraction::operator>=(const Fraction& other) const
+{
+    float a_3dec = roundf(float(num) / denom * 1000) / 1000;
+    float b_3dec = roundf(float(other.num) / other.denom * 1000) / 1000;
+    if (a_3dec >= b_3dec)
+    {
+        return true;
+    }
+    return false;
+};
+
+bool operator>=(float a, const Fraction &b)
+{
+     float b_3dec = roundf(float(b.num) / b.denom * 1000) / 1000;
+    float a_3dec = roundf(a * 1000) / 1000;
+    if (a_3dec >= b_3dec)
+    {
+        return true;
+    }
+    return false;
+}
+bool operator>=(const Fraction &a, float b){
+    float a_3dec = roundf(float(a.num) / a.denom * 1000) / 1000;
+    float b_3dec = roundf(b * 1000) / 1000;
+    if (a_3dec >= b_3dec)
+    {
+        return true;
+    }
+    return false;
+}
+
+bool Fraction::operator<=(const Fraction& other) const
+{
+    float a_3dec = roundf(float(num) / denom * 1000) / 1000;
+    float b_3dec = roundf(float(other.num) / other.denom * 1000) / 1000;
+    if (a_3dec <= b_3dec)
+    {
+        return true;
+    }
+    return false;
+};
+
+bool operator<=(float a, const Fraction &b)
+{
+     float b_3dec = roundf(float(b.num) / b.denom * 1000) / 1000;
+    float a_3dec = roundf(a * 1000) / 1000;
     if (a_3dec <= b_3dec)
     {
         return true;
     }
     return false;
 }
-bool operator<=(float a, Fraction b)
-{
-    float a_3dec = roundf(a * 1000) / 1000;
-    float b_3dec = roundf(float(b.num) / b.denom * 1000) / 1000;
-    if (a_3dec <= b_3dec)
-    {
-        return true;
-    }
-    return false;
-}
-bool operator<=(Fraction a, float b)
-{
-    float b_3dec = roundf(b * 1000) / 1000;
+bool operator<=(const Fraction &a, float b){
     float a_3dec = roundf(float(a.num) / a.denom * 1000) / 1000;
+    float b_3dec = roundf(b * 1000) / 1000;
     if (a_3dec <= b_3dec)
     {
         return true;
